@@ -13,13 +13,16 @@ export default function Home() {
     const formObject = Object.fromEntries(formData.entries());
     console.log(formObject);
     try {
-      const data = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formObject),
-      });
+      const data = await fetch(
+        "https://noubodiez-backend-test.vercel.app/api/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formObject),
+        }
+      );
       const result = await data.json();
       console.log(result);
       if (!result.success) {
