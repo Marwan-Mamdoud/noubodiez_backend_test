@@ -1,9 +1,23 @@
+"use client";
 import Image from "next/image";
-import React from "react";
 import ProjectModel from "./ProjectModel";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 const Projects = () => {
+  useEffect(() => {
+    const auth = async () => {
+      const data = await fetch("/api/verify");
+      const res = await data.json();
+      if (!res.success) {
+        toast.error("Login first");
+        return redirect("/");
+      }
+    };
+    auth();
+  }, []);
   return (
     <main className="flex flex-col items-center justify-start p-[80px] h-[100dvh] text-4xl font-bold">
       <Link href="/">

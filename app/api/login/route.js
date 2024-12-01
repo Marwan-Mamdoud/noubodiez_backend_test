@@ -1,6 +1,16 @@
+import { cookies } from "next/headers";
 import { connectDB } from "../connectToDB";
 import User from "../models/user";
 import bcrypt from "bcryptjs";
+import sign from "jsonwebtoken/sign.js";
+
+const createToken = async (userId, email) => {
+  return sign(
+    { email, userId },
+    "DSKFAJW45348RU9834545SHF;LKFJAS'DPJ$@%@#$",
+    {}
+  );
+};
 
 export async function POST(req) {
   const headers = new Headers();
@@ -39,12 +49,17 @@ export async function POST(req) {
         }
       );
     } else {
-      return new Response(
+      const token = await createToken(existUser._id, existUser.email);
+      const response = new Response(
         JSON.stringify({ user: existUser, success: true }, { headers }),
         {
           status: 201,
         }
       );
+      response.headers.set("Set-Cookie", `jwt=${token}`);
+      const cookieStore = cookies();
+      console.log(await cookieStore, "cookiee");
+      return response;
     }
   } catch (error) {
     console.log(error, "error eorror");
